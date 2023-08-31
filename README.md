@@ -1,109 +1,75 @@
-## Delight University Core Services
+### Book Catalog Backend
 
-Welcome to the Delight University Core Services repository! This repository serves as the foundation for managing various aspects of the university's academic operations. From maintaining academic semesters to enabling seamless communication among students and faculty, this repository houses essential functionalities. Below, you'll find an overview of the technologies used, key features, and more.
+Welcome to the Book Catalog Backend repository! This repository serves as the backbone for managing various aspects of the university's book catalog and library operations. From organizing book collections to enabling efficient access for students and faculty, this repository encompasses essential functionalities. Below, you'll find an overview of the technologies employed, key features, and more.
 
-## ER Diagram
+### ER Diagram
 
-<img src="https://i.ibb.co/bgRjbws/umDM.png" alt="ER Diagram"></img>
+#### Entities
 
-## Entities
+#### Book
 
-### AcademicSemester
+    id (Primary Key)
+    ISBN
+    title
+    author(s)
+    publicationYear
+    genre
+    language
+    coverImage
+    quantityAvailable
+    createdAt
+    updatedAt
+    borrowers
 
-- id (Primary Key)
-- year
-- title
-- code
-- startMonth
-- endMonth
-- createdAt
-- updatedAt
-- students
+### Author
 
-### AcademicFaculty
+    id (Primary Key)
+    firstName
+    lastName
+    bio
+    books
 
-- id (Primary Key)
-- title
-- createdAt
-- updatedAt
-- academicDepartments
-- students
-- faculties
+#### Borrower
 
-### AcademicDepartment
+    id (Primary Key)
+    firstName
+    lastName
+    profileImage
+    email
+    contactNo
+    booksBorrowed
+    createdAt
+    updatedAt
 
-- id (Primary Key)
-- title
-- createdAt
-- updatedAt
-- academicFaculty
-- students
-- faculties
+#### Genre
 
-### Student
+    id (Primary Key)
+    name
+    description
+    books
 
-- id (Primary Key)
-- studentId
-- firstName
-- lastName
-- middlename
-- profileImage
-- email
-- contactNo
-- gender
-- bloodGroup
-- academicSemester
-- academicDepartment
-- academicFaculty
-- createdAt
-- updatedAt
+#### Features
 
-### Faculty
+    User authentication and authorization
+    Search and filter book collection
+    Book borrowing and returning
+    User profiles and borrowing history
+    Genre-based categorization
+    Notifications for due dates and availability
 
-- id (Primary Key)
-- facultyId
-- firstName
-- lastName
-- middlename
-- profileImage
-- email
-- contactNo
-- gender
-- bloodGroup
-- designation
-- academicDepartment
-- academicFaculty
-- createdAt
-- updatedAt
+#### Technologies Used
 
-## Features
+    Backend: Node.js, Express.js, TypeScript
+    Database: PostgreSQL, Prisma ORM
+    Deployment: Vercel
+    Authentication: JWT
+    Packages Used: bcrypt, http-errors, http-status-codes, zod
 
-- User authentication and authorization
-- Interactive learning materials
-- Discussion forums
-- Assignments and assessments
-- Progress tracking
-- Notifications and announcements
+#### Features
 
-## Technologies Used
-
-- Backend: Node.js, Express.js, TypeScript
-- Database: PostgreSQL,Prisma ORM
-- Deployment: Vercel
-- Authentication: JWT
-- Packages Used: bcrypt, http-errors, http-status-codes, zod
-
-## Features
-
-- User Auth & Authorization: Secure login, role-based access.
-- Course Management: Faculty: create, update, delete, read courses.
-- Interactive Materials: Upload presentations, docs, videos for learning.
-- Discussion Forums: Engage in academic discussions.
-- Assignments & Assessments: Submit and grade tasks.
-- Progress Tracking: Monitor academic performance.
-- Notifications: Stay updated on course news and deadlines.
-
-#### If you have any questions, feel free to reach out to us:
-
-- Email: hasibulislam1670@gmail.com
-- GitHub: https://github.com/hasibul1670
+    User Auth & Authorization: Secure login, role-based access.
+    Book Management: Add, update, delete, and search books.
+    Borrowing System: Borrow and return books with due date tracking.
+    User Profiles: Keep track of borrowed books and borrowing history.
+    Genre Categorization: Organize books by genres for easy browsing.
+    Notifications: Receive alerts for upcoming due dates and book availability.
