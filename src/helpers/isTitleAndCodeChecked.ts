@@ -1,5 +1,5 @@
 import { StatusCodes } from 'http-status-codes';
-import { academicSemesterTitleCodeMapper } from '../app/modules/academicSemester/academicSemester.constant';
+import { academicSemesterTitleCodeMapper } from '../app/modules/order/academicSemester.constant';
 import { ApiError } from '../handlingError/ApiError';
 
 export const isTitleAndCodeChecked = (title: string, code: string) => {
