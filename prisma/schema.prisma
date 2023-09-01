@@ -10,212 +10,92 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model AcademicSemester {
-  id                   String                 @id @default(uuid())
-  year                 Int
-  title                String
-  code                 String
-  startMonth           String
-  endMonth             String
-  createdAt            DateTime               @default(now())
-  updatedAt            DateTime               @updatedAt
-  students             Student[]
-  SemesterRegistration SemesterRegistration[]
+model User {
+  id              String            @id @default(uuid())
+  name            String
+  email           String
+  password        String
+  role            String
+  contactNo       String
+  address         String
+  profileImg      String
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+  reviewAndRating ReviewAndRating[]
 
-  @@unique([year, title, code, startMonth, endMonth], name: "unique_academic_semester")
-  @@map("academic_semesters")
+  @@unique([email], name: "unique_user")
+  @@map("user")
 }
 
-model AcademicFaculty {
-  id                  String               @id @default(uuid())
-  title               String
-  createdAt           DateTime             @default(now())
-  updatedAt           DateTime             @updatedAt
-  academicDepartments AcademicDepartment[]
-  students            Student[]
-  faculties           Faculty[]
-
-  @@unique([title], name: "unique_academic_faculty")
-  @@map("academic_faculties")
-}
-
-model AcademicDepartment {
-  id                String          @id @default(uuid())
-  title             String
-  createdAt         DateTime        @default(now())
-  updatedAt         DateTime        @updatedAt
-  academicFaculty   AcademicFaculty @relation(fields: [academicFacultyId], references: [id])
-  academicFacultyId String
-  students          Student[]
-  faculties         Faculty[]
-  OfferedCourse     OfferedCourse[]
-
-  @@unique([title], name: "unique_academic_department")
-  @@map("academic_departments")
-}
-
-model Student {
-  id           String @id @default(uuid())
-  studentId    String
-  firstName    String
-  lastName     String
-  middlename   String
-  profileImage String
-  email        String
-  contactNo    String
-
-  gender               String
-  bloodGroup           String
-  academicSemester     AcademicSemester   @relation(fields: [academicSemesterId], references: [id])
-  academicSemesterId   String
-  academicDepartment   AcademicDepartment @relation(fields: [academicDepartmentId], references: [id])
-  academicDepartmentId String
-  academicFaculty      AcademicFaculty    @relation(fields: [academicFacultyId], references: [id])
-  academicFacultyId    String
-  createdAt            DateTime           @default(now())
-  updatedAt            DateTime           @updatedAt
-
-  @@unique([email], name: "unique_student")
-  @@map("students")
-}
-
-model Faculty {
-  id                   String             @id @default(uuid())
-  facultyId            String
-  firstName            String
-  lastName             String
-  middlename           String
-  profileImage         String
-  email                String
-  contactNo            String
-  gender               String
-  bloodGroup           String
-  designation          String
-  academicDepartment   AcademicDepartment @relation(fields: [academicDepartmentId], references: [id])
-  academicDepartmentId String
-  academicFaculty      AcademicFaculty    @relation(fields: [academicFacultyId], references: [id])
-  academicFacultyId    String
-  createdAt            DateTime           @default(now())
-  updatedAt            DateTime           @updatedAt
-  CourseFaculty        CourseFaculty[]
-
-  @@unique([email], name: "unique_faculties")
-  @@map("faculties")
-}
-
-model Room {
-  id         String   @id @default(uuid())
-  roomNumber String
-  floor      String
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
-  buildingId String
-  building   Building @relation(fields: [buildingId], references: [id])
-
-  @@unique([roomNumber], name: "unique_room")
-  @@map("room")
-}
-
-model Building {
+model Category {
   id        String   @id @default(uuid())
   title     String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  rooms     Room[]
+  book      Book[]
 
-  @@unique([title], name: "unique_building")
-  @@map("building")
+  @@unique([title], name: "unique_category")
+  @@map("category")
 }
 
-model Course {
-  id              String                 @id @default(uuid())
+model Book {
+  id              String            @id @default(uuid())
   title           String
-  code            String
-  credits         Int                    @default(0)
-  createdAt       DateTime               @default(now())
-  updatedAt       DateTime               @updatedAt
-  preRequisite    CourseToPrerequisite[] @relation("CourseToPrerequisite")
-  preRequisiteFor CourseToPrerequisite[] @relation("PrerequisiteToCourse")
-  faculties       CourseFaculty[]
-  offeredCourses  OfferedCourse[]
+  author          String
+  price           Float
+  genre           String
+  publicationDate DateTime
+  categoryId      String
+  categoty        Category          @relation(fields: [categoryId], references: [id])
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+  reviewAndRating ReviewAndRating[]
+  OrderedBook     OrderedBook[]
 
-  @@unique([title], name: "unique_course")
-  @@map("courses")
+  @@unique([title], name: "unique_book")
+  @@map("books")
 }
 
-model CourseToPrerequisite {
-  courseId       String
-  preRequisiteId String
-
-  course       Course @relation(fields: [courseId], references: [id], name: "CourseToPrerequisite")
-  preRequisite Course @relation(fields: [preRequisiteId], references: [id], name: "PrerequisiteToCourse")
-
-  @@id([courseId, preRequisiteId])
-}
-
-model CourseFaculty {
-  courseId String
-  course   Course @relation(fields: [courseId], references: [id])
-
-  facultyId String
-  faculty   Faculty @relation(fields: [facultyId], references: [id])
-
-  @@id([courseId, facultyId])
-  @@map("course_faculties")
-}
-
-model SemesterRegistration {
-  id                    String                      @id @default(uuid())
-  startDate             DateTime
-  endDate               DateTime
-  status                SemesterRegistrationStatus? @default(UPCOMING)
-  minCredit             Int                         @default(0)
-  maxCredit             Int                         @default(0)
-  createdAt             DateTime                    @default(now())
-  updatedAt             DateTime                    @updatedAt
-  academicSemesterId    String
-  academicSemester      AcademicSemester            @relation(fields: [academicSemesterId], references: [id])
-  offeredCourses        OfferedCourse[]
-  offeredCourseSections OfferedCourseSection[]
-
-  @@map("semester_registrations")
-}
-
-model OfferedCourse {
+model ReviewAndRating {
   id        String   @id @default(uuid())
+  review    String
+  rating    Int
+  userId    String
+  bookId    String
+  user      User     @relation(fields: [userId], references: [id])
+  book      Book     @relation(fields: [bookId], references: [id])
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  courseId  String
-  course    Course   @relation(fields: [courseId], references: [id])
 
-  academicDepartmentId String
-  academicDepartment   AcademicDepartment @relation(fields: [academicDepartmentId], references: [id])
-
-  semesterRegistrationId String
-  semesterRegistration   SemesterRegistration   @relation(fields: [semesterRegistrationId], references: [id])
-  offeredCourseSections  OfferedCourseSection[]
-
-  @@map("offered_courses")
+  @@map("reviews_and_ratings")
 }
 
-model OfferedCourseSection {
-  id                       String        @id @default(uuid())
-  title                    String
-  maxCapacity              Int
-  currentlyEnrolledStudent Int           @default(0)
-  createdAt                DateTime      @default(now())
-  updatedAt                DateTime      @updatedAt
-  offeredCourseId          String
-  offeredCourse            OfferedCourse @relation(fields: [offeredCourseId], references: [id])
+model Order {
+  id          String        @id @default(uuid())
+  userId      String
+  orderedBook OrderedBook[]
+  status      OrderStatus?  @default(pending)
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
 
-  semesterRegistrationId String
-  semesterRegistration   SemesterRegistration @relation(fields: [semesterRegistrationId], references: [id])
-
-  @@map("offered_course_sections")
+  @@map("orders")
 }
 
-enum SemesterRegistrationStatus {
-  UPCOMING
-  ONGOING
-  ENDED
+model OrderedBook {
+  id        String   @id @default(uuid())
+  orderId   String
+  bookId    String
+  order     Order    @relation(fields: [orderId], references: [id])
+  book      Book     @relation(fields: [bookId], references: [id])
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("ordered_book")
+}
+
+enum OrderStatus {
+  pending
+  shipped
+  delivered
+  canceled
 }
