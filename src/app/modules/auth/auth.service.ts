@@ -7,6 +7,7 @@ import config from '../../../config';
 import { ApiError } from '../../../handlingError/ApiError';
 import { jwtHelpers } from '../../../helpers/jwtHelpers';
 
+import { generateUserId } from '../../../helpers/generateId';
 import { ILoginUser, ILoginUserResponse } from './auth.interface';
 import { isPasswordMatched } from './auth.utils';
 const prisma = new PrismaClient();
@@ -16,10 +17,12 @@ const signUp = async (payload: User): Promise<User> => {
     const { password, ...userData } = payload;
     const hashedPassword = await bcrypt.hash(password, 10);
 
+    const userId = await generateUserId();
     const result = await prisma.user.create({
       data: {
         ...userData,
         password: hashedPassword,
+        userId: userId,
       },
     });
     return result;
@@ -52,8 +55,12 @@ const loginuser = async (
     }
 
     // Generate an access token
+
+    const role = isFound.role;
+    const userId = isFound.userId;
     const token = jwtHelpers.createToken(
-      { email },
+      { role, userId },
+
       config.jwt.secret as Secret,
       config.jwt.expires_in as string
     );
