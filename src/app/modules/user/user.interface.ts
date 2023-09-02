@@ -1,26 +1,26 @@
-export type IStudentFilterRequest = {
+export type IUserFilterRequest = {
   searchTerm?: string | undefined;
   academicFacultyId?: string | undefined;
   academicDepartmentId?: string | undefined;
   academicSemesterId?: string | undefined;
-  studentId?: string | undefined;
+  UserId?: string | undefined;
   email?: string | undefined;
   contactNo?: string | undefined;
   gender?: string | undefined;
   bloodGroup?: string | undefined;
 }
 
-export type IStudentMyCoursesRequest = {
+export type IUserMyCoursesRequest = {
   academicSemesterId?: string | undefined;
   courseId?: string | undefined;
 }
 
-export type IStudentMyCourseSchedulesRequest = {
+export type IUserMyCourseSchedulesRequest = {
   academicSemesterId?: string | undefined;
   courseId?: string | undefined;
 }
 
-export type StudentCreatedEvent = {
+export type UserCreatedEvent = {
   id: string;
   name: {
       firstName: string;
@@ -44,7 +44,7 @@ export type StudentCreatedEvent = {
   };
 };
 
-export type StudentUpdatedEvent = {
+export type UserUpdatedEvent = {
   id: string;
   name: {
       firstName: string;

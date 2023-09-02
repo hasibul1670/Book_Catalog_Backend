@@ -4,51 +4,52 @@ import { ApiError } from '../../../handlingError/ApiError';
 import catchAsync from '../../../shared/catchAsync';
 import pick from '../../../shared/pick';
 import { sendControllerResponse } from '../../../shared/sendControllerResponse';
-import { studentFilterableFields } from './student.constant';
-import { StudentServices } from './student.services';
+import { AuthService } from '../auth/auth.service';
+import { userFilterableFields } from './user.constant';
+import { UserServices } from './user.services';
 
-const createStudent = catchAsync(async (req: Request, res: Response) => {
-  const result = await StudentServices.createStudent(req.body);
-  sendControllerResponse(res, 'Student is Created Successfully!', result);
+const createUser = catchAsync(async (req: Request, res: Response) => {
+  const result = await AuthService.signUp(req.body);
+  sendControllerResponse(res, 'User is Created Successfully!', result);
 });
 
-const getAllStudents = catchAsync(async (req: Request, res: Response) => {
-  const filters = pick(req.query, studentFilterableFields);
+const getAllUsers = catchAsync(async (req: Request, res: Response) => {
+  const filters = pick(req.query, userFilterableFields);
   const options = pick(req.query, ['limit', 'page', 'sortBy', 'sortOrder']);
 
-  const result = await StudentServices.getAllStudents(filters, options);
-  sendControllerResponse(res, 'Students retrieved successfully !', result);
+  const result = await UserServices.getAllUsers(filters, options);
+  sendControllerResponse(res, 'Users retrieved successfully !', result);
 });
 
-const deleteStudent = catchAsync(async (req: Request, res: Response) => {
+const deleteUser = catchAsync(async (req: Request, res: Response) => {
   const { id } = req.params;
-  const result = await StudentServices.deleteStudent(id);
-  sendControllerResponse(res, ' Student Deleted successfully !', result);
+  const result = await UserServices.deleteUser(id);
+  sendControllerResponse(res, ' User Deleted successfully !', result);
 });
 
-const getSingleStudent = catchAsync(async (req: Request, res: Response) => {
+const getSingleUser = catchAsync(async (req: Request, res: Response) => {
   const { id } = req.params;
 
-  const result = await StudentServices.getSingleStudent(id);
+  const result = await UserServices.getSingleUser(id);
 
   if (!result) {
-    throw new ApiError(404, 'Student  not found');
+    throw new ApiError(404, 'User  not found');
   }
 
-  sendControllerResponse(res, 'Single Student retrieved successfully!', result);
+  sendControllerResponse(res, 'Single User retrieved successfully!', result);
 });
 
-const updateSingleStudent = catchAsync(async (req: Request, res: Response) => {
+const updateSingleUser = catchAsync(async (req: Request, res: Response) => {
   const { id } = req.params;
   const newData = req.body;
-  const result = await StudentServices.updateSingleStudent(id, newData);
-  sendControllerResponse(res, 'Single Student Updated  successfully !', result);
+  const result = await UserServices.updateSingleUser(id, newData);
+  sendControllerResponse(res, 'Single User Updated  successfully !', result);
 });
 
-export const StudentControllers = {
-  createStudent,
-  getAllStudents,
-  getSingleStudent,
-  deleteStudent,
-  updateSingleStudent,
+export const UserControllers = {
+  createUser,
+  getAllUsers,
+  getSingleUser,
+  deleteUser,
+  updateSingleUser,
 };

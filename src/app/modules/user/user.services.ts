@@ -1,56 +1,51 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { PrismaClient, Student } from '@prisma/client';
+import { PrismaClient, User } from '@prisma/client';
 import { ApiError } from '../../../handlingError/ApiError';
 import { buildWhereConditions } from '../../../helpers/buildWhereCondition';
 import { paginationHelpers } from '../../../helpers/paginationHelper';
 import { IGenericResponse } from '../../../interfaces/common';
 import { IPaginationOptions } from '../../../interfaces/pagination';
-import { studentSearchableFields } from './student.constant';
-import { IStudentFilterRequest } from './student.interface';
+import { userSearchableFields } from './user.constant';
+import { IUserFilterRequest } from './user.interface';
 
 const prisma = new PrismaClient();
 
-const createStudent = async (payload: Student): Promise<Student> => {
+const createUser = async (payload: User): Promise<User> => {
   try {
-    const result = await prisma.student.create({
+    const result = await prisma.user.create({
       data: payload,
-      include: {
-        academicFaculty: true,
-        academicDepartment: true,
-        academicSemester: true,
-      },
     });
     return result;
   } catch (error) {
     const err = error as any;
     if (err.code === 'P2002') {
-      throw new ApiError(409, 'This Student is already Exist !! ');
+      throw new ApiError(409, 'This User is already Exist !! ');
     }
     throw error;
   }
 };
 
-const getAllStudents = async (
-  filters: IStudentFilterRequest,
+const getAllUsers = async (
+  filters: IUserFilterRequest,
   options: IPaginationOptions
-): Promise<IGenericResponse<Student[]>> => {
+): Promise<IGenericResponse<User[]>> => {
   const { page, limit, skip, sortBy, sortOrder } =
     paginationHelpers.calculatePagination(options);
   const { searchTerm, ...filtersData } = filters;
   const { whereConditions, sortConditions } = buildWhereConditions(
     searchTerm,
     filtersData,
-    studentSearchableFields,
+    userSearchableFields,
     sortBy,
     sortOrder
   );
-  const result = await prisma.student.findMany({
+  const result = await prisma.user.findMany({
     where: whereConditions,
     skip,
     take: limit,
     orderBy: sortConditions,
   });
-  const total = await prisma.student.count();
+  const total = await prisma.user.count();
   return {
     meta: {
       total,
@@ -61,29 +56,29 @@ const getAllStudents = async (
   };
 };
 
-const getSingleStudent = async (id: string) => {
-  const result = await prisma.student.findUnique({
+const getSingleUser = async (id: string) => {
+  const result = await prisma.user.findUnique({
     where: { id },
   });
   return result;
 };
 
-const deleteStudent = async (id: string) => {
+const deleteUser = async (id: string) => {
   try {
-    return await prisma.student.delete({
+    return await prisma.user.delete({
       where: { id },
     });
   } catch (error) {
     const err = error as any;
     if (err.code === 'P2025') {
-      throw new ApiError(404, 'Student Not Found !!!');
+      throw new ApiError(404, 'User Not Found !!!');
     }
   }
 };
 
-const updateSingleStudent = async (id: string, newData: Partial<Student>) => {
+const updateSingleUser = async (id: string, newData: Partial<User>) => {
   try {
-    const updatedSemester = await prisma.student.update({
+    const updatedSemester = await prisma.user.update({
       where: { id },
       data: newData,
     });
@@ -91,19 +86,19 @@ const updateSingleStudent = async (id: string, newData: Partial<Student>) => {
   } catch (error) {
     const err = error as any;
     if (err.code === 'P2002') {
-      throw new ApiError(409, 'This Student is already Exist');
+      throw new ApiError(409, 'This User is already Exist');
     }
     if (err.code === 'P2025') {
-      throw new ApiError(404, 'Student  Not Found !!!');
+      throw new ApiError(404, 'User  Not Found !!!');
     }
     throw error;
   }
 };
 
-export const StudentServices = {
-  createStudent,
-  deleteStudent,
-  getAllStudents,
-  getSingleStudent,
-  updateSingleStudent,
+export const UserServices = {
+  createUser,
+  deleteUser,
+  getAllUsers,
+  getSingleUser,
+  updateSingleUser,
 };

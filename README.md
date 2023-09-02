@@ -73,3 +73,13 @@ Welcome to the Book Catalog Backend repository! This repository serves as the ba
     User Profiles: Keep track of borrowed books and borrowing history.
     Genre Categorization: Organize books by genres for easy browsing.
     Notifications: Receive alerts for upcoming due dates and book availability.
+
+### API Endpoints and Sample Data
+
+#### User Sign Up
+
+  - http://localhost:5000/api/v1/auth/signup (POST)
+
+#### User Sign In/Login
+
+  - http://localhost:5000/api/v1/auth/signin (POST)
