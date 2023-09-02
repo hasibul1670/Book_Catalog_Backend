@@ -83,3 +83,15 @@ Welcome to the Book Catalog Backend repository! This repository serves as the ba
 #### User Sign In/Login
 
   - http://localhost:5000/api/v1/auth/signin (POST)
+#### Get All Users [Only Allowed For Admin]
+
+  - http://localhost:5000/api/v1/users (GET)
+#### Get Single User [Only Allowed For Admin]
+
+  - http://localhost:5000/api/v1/users/8ffa2617-fd99-42fe-acea-8123574c0a6e (GET)
+#### Update a Single User [Only Allowed For Admin]
+
+  - http://localhost:5000/api/v1/users/8ffa2617-fd99-42fe-acea-8123574c0a6e (PATCH)
+#### Delete a Single User [Only Allowed For Admin]
+
+  - http://localhost:5000/api/v1/users/8ffa2617-fd99-42fe-acea-8123574c0a6e (DELETE)
