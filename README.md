@@ -78,20 +78,17 @@ Welcome to the Book Catalog Backend repository! This repository serves as the ba
 
 #### User Sign Up
 
-  - http://localhost:5000/api/v1/auth/signup (POST)
+- http://localhost:5000/api/v1/auth/signup (POST) //Sign up
+- http://localhost:5000/api/v1/auth/signin (POST) //Login
+- http://localhost:5000/api/v1/users (GET) :Allowed For Admin
+- http://localhost:5000/api/v1/users/8ffa2617-fd99-42fe-acea-8123574c0a6e (GET):Allowed For Admin
+- http://localhost:5000/api/v1/users/8ffa2617-fd99-42fe-acea-8123574c0a6e (PATCH):Allowed For Admin
+- http://localhost:5000/api/v1/users/8ffa2617-fd99-42fe-acea-8123574c0a6e (DELETE):Allowed For Admin
 
-#### User Sign In/Login
+#### Category Routes
 
-  - http://localhost:5000/api/v1/auth/signin (POST)
-#### Get All Users [Only Allowed For Admin]
-
-  - http://localhost:5000/api/v1/users (GET)
-#### Get Single User [Only Allowed For Admin]
-
-  - http://localhost:5000/api/v1/users/8ffa2617-fd99-42fe-acea-8123574c0a6e (GET)
-#### Update a Single User [Only Allowed For Admin]
-
-  - http://localhost:5000/api/v1/users/8ffa2617-fd99-42fe-acea-8123574c0a6e (PATCH)
-#### Delete a Single User [Only Allowed For Admin]
-
-  - http://localhost:5000/api/v1/users/8ffa2617-fd99-42fe-acea-8123574c0a6e (DELETE)
+- http://localhost:5000/api/v1/categories/create-category (POST) → Only Allowed For Admin
+- http://localhost:5000/api/v1/categories (GET)
+- http://localhost:5000/api/v1/categories/b33e6c08-8b5e-47f5-b7cc-73f3b2f36a4d (GET)
+- http://localhost:5000/api/v1/categories/b33e6c08-8b5e-47f5-b7cc-73f3b2f36a4d (PATCH)//Allowed For Admin
+- http://localhost:5000/api/v1/categories/b33e6c08-8b5e-47f5-b7cc-73f3b2f36a4d (DELETE)//Allowed For Admin

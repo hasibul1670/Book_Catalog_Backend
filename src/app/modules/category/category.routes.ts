@@ -1,23 +1,37 @@
 import express from 'express';
+import { ENUM_USER_ROLE } from '../../../enums/user';
+import auth from '../../middlewares/auth';
 import validateRequest from '../../middlewares/validateRequest';
-import { CourseControllers } from './course.contoller';
-import { CourseValidation } from './course.validation';
+import { CategoryControllers } from './category.contoller';
+import { CategoryValidation } from './category.validation';
 
 const router = express.Router();
 router.post(
-  '/create-course',
-  validateRequest(CourseValidation.createValidation),
-  CourseControllers.createcourse
+  '/create-category',
+  auth(ENUM_USER_ROLE.ADMIN),
+  validateRequest(CategoryValidation.createValidation),
+  CategoryControllers.createCategory
 );
 
-router.get('/', CourseControllers.getAllCourses);
-router.get('/:id', CourseControllers.getSingleCourse);
-router.delete('/:id', CourseControllers.deleteCourse);
+router.get(
+  '/',
+  CategoryControllers.getAllCategories
+);
+router.get(
+  '/:id',
+  CategoryControllers.getSingleCategory
+);
+router.delete(
+  '/:id',
+  auth(ENUM_USER_ROLE.ADMIN),
+  CategoryControllers.deleteCategory
+);
 
 router.patch(
   '/:id',
-  validateRequest(CourseValidation.updateValidation),
-  CourseControllers.updateCourse
+  auth(ENUM_USER_ROLE.ADMIN),
+  validateRequest(CategoryValidation.updateValidation),
+  CategoryControllers.updateCategory
 );
 
-export const CourseRoutes = router;
+export const CategoryRoutes = router;
