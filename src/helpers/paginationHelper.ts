@@ -1,10 +1,10 @@
-import { SortOrder } from 'mongoose';
-
 export type IOptions = {
   page?: number;
   limit?: number;
   sortBy?: string;
-  sortOrder?: SortOrder;
+  sortOrder?: 'asc' | 'desc';
+  maxPrice?: number;
+  minPrice?: number;
 };
 
 export type IOptionsResult = {
@@ -12,7 +12,10 @@ export type IOptionsResult = {
   limit: number;
   skip: number;
   sortBy: string;
-  sortOrder: SortOrder;
+  sortOrder?: 'asc' | 'desc';
+  total?: number;
+  maxPrice?: number;
+  minPrice?: number;
 };
 
 const calculatePagination = (options: IOptions): IOptionsResult => {
@@ -22,6 +25,8 @@ const calculatePagination = (options: IOptions): IOptionsResult => {
 
   const sortBy = options.sortBy || 'createdAt';
   const sortOrder = options.sortOrder || 'desc';
+  const minPrice = options.minPrice;
+  const maxPrice = options.maxPrice;
 
   return {
     page,
@@ -29,6 +34,8 @@ const calculatePagination = (options: IOptions): IOptionsResult => {
     skip,
     sortBy,
     sortOrder,
+    maxPrice,
+    minPrice,
   };
 };
 

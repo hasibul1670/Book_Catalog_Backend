@@ -1,4 +1,4 @@
-export type IAcademicDepartmentFilterRequest = {
+export type IBookFilterRequest = {
     searchTerm?: string | undefined;
-    academicFacultyId?: string | undefined;
+    categoryId?: string | undefined;
 }

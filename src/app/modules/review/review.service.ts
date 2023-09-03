@@ -1,49 +1,51 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Order, PrismaClient } from '@prisma/client';
+import { Category, PrismaClient } from '@prisma/client';
 import { ApiError } from '../../../handlingError/ApiError';
 import { buildWhereConditions } from '../../../helpers/buildWhereCondition';
 import { paginationHelpers } from '../../../helpers/paginationHelper';
 import { IGenericResponse } from '../../../interfaces/common';
 import { IPaginationOptions } from '../../../interfaces/pagination';
-import { OrderFilterableFields } from './order.constant';
-import { IOrderFilterRequest } from './order.interface';
+import { categorySearchableFields } from './category.constants';
+import { ICategoryFilterRequest } from './category.interface';
 
 const prisma = new PrismaClient();
 
-const createOrder = async (payload: Order) => {
+const createCategory = async (payload: Category): Promise<Category> => {
   try {
-    return await prisma.order.create({ data: payload });
+    const result = await prisma.category.create({
+      data: payload,
+    });
+    return result;
   } catch (error) {
     const err = error as any;
     if (err.code === 'P2002') {
-      throw new ApiError(409, 'This academic semester already exists');
+      throw new ApiError(409, 'This Category is already Exist !! ');
     }
     throw error;
   }
 };
 
-const getAllOrders = async (
-  filters: IOrderFilterRequest,
+const getAllCategories = async (
+  filters: ICategoryFilterRequest,
   options: IPaginationOptions
-): Promise<IGenericResponse<Order[]>> => {
+): Promise<IGenericResponse<Category[]>> => {
   const { page, limit, skip, sortBy, sortOrder } =
     paginationHelpers.calculatePagination(options);
-
   const { searchTerm, ...filtersData } = filters;
   const { whereConditions, sortConditions } = buildWhereConditions(
     searchTerm,
     filtersData,
-    OrderFilterableFields,
+    categorySearchableFields,
     sortBy,
     sortOrder
   );
-  const result = await prisma.order.findMany({
+  const result = await prisma.category.findMany({
     where: whereConditions,
     skip,
     take: limit,
     orderBy: sortConditions,
   });
-  const total = await prisma.order.count();
+  const total = await prisma.category.count();
   return {
     meta: {
       total,
@@ -54,47 +56,49 @@ const getAllOrders = async (
   };
 };
 
-const getSingleOrder = async (id: string) => {
-  const result = await prisma.order.findUnique({
+const getSingleCategory = async (id: string) => {
+  const result = await prisma.category.findUnique({
     where: { id },
   });
   return result;
 };
 
-const deleteOrder = async (id: string) => {
+const deleteCategory = async (id: string) => {
   try {
-    return await prisma.order.delete({
+    return await prisma.category.delete({
       where: { id },
     });
   } catch (error) {
     const err = error as any;
     if (err.code === 'P2025') {
-      throw new ApiError(404, 'Academic Semester Not Found !!!');
+      throw new ApiError(404, 'Category Not Found !!!');
     }
   }
 };
 
-const updateSingleOrder = async (id: string, newData: Partial<Order>) => {
+const updateSingleCategory = async (id: string, newData: Partial<Category>) => {
   try {
-    const updatedSemester = await prisma.order.update({
+    const updatedSemester = await prisma.category.update({
       where: { id },
       data: newData,
     });
-
     return updatedSemester;
   } catch (error) {
     const err = error as any;
+    if (err.code === 'P2002') {
+      throw new ApiError(409, 'This Category is already Exist');
+    }
     if (err.code === 'P2025') {
-      throw new ApiError(404, 'Academic Semester Not Found !!!');
+      throw new ApiError(404, 'Category  Not Found !!!');
     }
     throw error;
   }
 };
 
-export const OrderServices = {
-  createOrder,
-  deleteOrder,
-  getAllOrders,
-  getSingleOrder,
-  updateSingleOrder,
+export const CategoryServices = {
+  createCategory,
+  deleteCategory,
+  getAllCategories,
+  getSingleCategory,
+  updateSingleCategory,
 };

@@ -5,8 +5,11 @@ export const buildWhereConditions = (
   filtersData?: any,
   searchableFields?: SearchableField[],
   sortBy?: number | string,
-  sortOrder?: any
+  sortOrder?: any,
+  maxPrice?: number,
+  minPrice?: number
 ) => {
+
   const andConditions = [];
   if (searchTerm) {
     andConditions.push({
@@ -34,7 +37,21 @@ export const buildWhereConditions = (
   if (sortBy && sortOrder) {
     sortConditions[sortBy] = sortOrder;
   }
+  if (maxPrice !== undefined) {
+    andConditions.push({
+      price: {
+        lte: maxPrice,
+      },
+    });
+  }
 
+  if (minPrice !== undefined) {
+    andConditions.push({
+      price: {
+        gte: minPrice,
+      },
+    });
+  }
   const whereConditions =
     andConditions.length > 0 ? { AND: andConditions } : {};
 

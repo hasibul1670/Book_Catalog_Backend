@@ -1,55 +1,55 @@
-import { AcademicDepartment, PrismaClient } from '@prisma/client';
 import { paginationHelpers } from '../../../helpers/paginationHelper';
 import { IGenericResponse } from '../../../interfaces/common';
 import { IPaginationOptions } from '../../../interfaces/pagination';
-
 import { ApiError } from '../../../handlingError/ApiError';
 import { buildWhereConditions } from '../../../helpers/buildWhereCondition';
-import { academicDepartmentSearchableFields } from './academicDepartment.contants';
-import { IAcademicDepartmentFilterRequest } from './academicDepartment.interface';
+import { bookSearchableFields } from './book.contants';
+import { IBookFilterRequest } from './book.interface';
+import { Book, PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
-const createAcademicDepartment = async (
-  data: AcademicDepartment
-): Promise<AcademicDepartment> => {
+
+const createBook = async (payload: Book): Promise<Book> => {
   try {
-    return await prisma.academicDepartment.create({
-      data,
-      include: {
-        academicFaculty: true,
-      },
+    const result = await prisma.book.create({
+      data: payload,
     });
+
+    return result;
   } catch (error) {
     const err = error as any;
+    console.log('Hello----------------------',error);
     if (err.code === 'P2002') {
-      throw new ApiError(409, 'This Academic Department is already Exist');
+      throw new ApiError(409, 'This BOOKS is already Exist !! ');
     }
     throw error;
   }
 };
 
-const getAllAcademicDepartments = async (
-  filters: IAcademicDepartmentFilterRequest,
+const getAllBooks = async (
+  filters: IBookFilterRequest,
   options: IPaginationOptions
-): Promise<IGenericResponse<AcademicDepartment[]>> => {
-  const { limit, page, skip, sortBy, sortOrder } =
+): Promise<IGenericResponse<Book[]>> => {
+  const { limit, page, skip, sortBy, sortOrder, minPrice, maxPrice } =
     paginationHelpers.calculatePagination(options);
 
   const { searchTerm, ...filtersData } = filters;
   const { whereConditions, sortConditions } = buildWhereConditions(
     searchTerm,
     filtersData,
-    academicDepartmentSearchableFields,
+    bookSearchableFields,
     sortBy,
-    sortOrder
+    sortOrder,
+    maxPrice,
+    minPrice
   );
-  const result = await prisma.academicDepartment.findMany({
+  const result = await prisma.book.findMany({
     where: whereConditions,
     skip,
     take: limit,
     orderBy: sortConditions,
   });
-  const total = await prisma.academicDepartment.count();
+  const total = await prisma.book.count();
   return {
     meta: {
       total,
@@ -60,66 +60,56 @@ const getAllAcademicDepartments = async (
   };
 };
 
-const getSingleAcademicDepartment = async (
-  id: string
-): Promise<AcademicDepartment | null> => {
-  const result = await prisma.academicDepartment.findUnique({
-    where: {
-      id,
-    },
-    include: {
-      academicFaculty: true,
-    },
+const getSingleBook = async (id: string): Promise<Book | null> => {
+  const result = await prisma.book.findUnique({
+    where: { id: id },
+    include: { category: true },
   });
+
   return result;
 };
-const deleteAcademicDepartment = async (id: string) => {
+
+const deleteBook = async (id: string) => {
   try {
-    const result = await prisma.academicDepartment.delete({
+    const result = await prisma.book.delete({
       where: {
         id,
-      },
-      include: {
-        academicFaculty: true,
       },
     });
     return result;
   } catch (error) {
     const err = error as any;
     if (err.code === 'P2025') {
-      throw new ApiError(404, 'Academic Faculty Not Found !!!');
+      throw new ApiError(404, 'BOOKS  Not Found !!!');
     }
   }
 };
-const updateAcademicDepartment = async (
+const updateBook = async (
   id: string,
-  newData: Partial<AcademicDepartment>
-): Promise<AcademicDepartment | null> => {
+  newData: Partial<Book>
+): Promise<Book | null> => {
   try {
-    const updatedDepartment = await prisma.academicDepartment.update({
+    const updatedDepartment = await prisma.book.update({
       where: { id },
       data: newData,
-      include: {
-        academicFaculty: true,
-      },
     });
     return updatedDepartment;
   } catch (error) {
     const err = error as any;
     if (err.code === 'P2002') {
-      throw new ApiError(409, 'This Academic Departmant is already Exist');
+      throw new ApiError(409, 'This BOOKS  is already Exist');
     }
     if (err.code === 'P2025') {
-      throw new ApiError(404, 'Academic Departmant  Not Found !!!');
+      throw new ApiError(404, ' BOOKS  Not Found !!!');
     }
     throw error;
   }
 };
 
-export const AcademicDepartmentService = {
-  createAcademicDepartment,
-  getAllAcademicDepartments,
-  getSingleAcademicDepartment,
-  deleteAcademicDepartment,
-  updateAcademicDepartment,
+export const BookServices = {
+  createBook,
+  getAllBooks,
+  getSingleBook,
+  deleteBook,
+  updateBook,
 };

@@ -1,23 +1,27 @@
 import express from 'express';
+import { ENUM_USER_ROLE } from '../../../enums/user';
+import auth from '../../middlewares/auth';
 import validateRequest from '../../middlewares/validateRequest';
-import { AcademicDepartmentController } from './academicDepartment.controller';
-import { AcademicDepartmentValidation } from './academicDepartment.validations';
-
+import { BookControllers } from './book.controller';
+import { BookValidation } from './book.validations';
 const router = express.Router();
 
-router.get('/', AcademicDepartmentController.getAllAcademicDepartments);
-router.get('/:id', AcademicDepartmentController.getSingleAcademicDepartment);
-
 router.post(
-    '/create-dept',
-    validateRequest(AcademicDepartmentValidation.createValidation),
-    AcademicDepartmentController.createAcademicDepartment
+  '/create-book',
+  auth(ENUM_USER_ROLE.ADMIN),
+  validateRequest(BookValidation.createValidation),
+  BookControllers.createBook
 );
-router.patch(
-    '/:id',
-    validateRequest(AcademicDepartmentValidation.updateValidation),
-    AcademicDepartmentController.updateAcademicDepartment
-  );
-  router.delete('/:id', AcademicDepartmentController.deleteAcademicDepartment);
 
-export const AcademicDepartmentRoutes = router;
+router.get('/', BookControllers.getAllBooks);
+router.get('/:id', BookControllers.getSingleBook);
+
+router.patch(
+  '/:id',
+  auth(ENUM_USER_ROLE.ADMIN),
+  validateRequest(BookValidation.updateValidation),
+  BookControllers.updateBook
+);
+router.delete('/:id', auth(ENUM_USER_ROLE.ADMIN), BookControllers.deleteBook);
+
+export const BookRoutes = router;

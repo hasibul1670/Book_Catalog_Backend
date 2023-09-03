@@ -11,21 +11,39 @@ datasource db {
 }
 
 model User {
-  id              String            @id @default(uuid())
-  name            String
-  userId          String
-  email           String
-  password        String
-  role            String
-  contactNo       String
-  address         String
-  profileImg      String
-  createdAt       DateTime          @default(now())
-  updatedAt       DateTime          @updatedAt
-  reviewAndRating ReviewAndRating[]
+  id         String   @id @default(uuid())
+  name       String
+  userId     String?
+  email      String
+  password   String
+  role       String
+  contactNo  String
+  address    String
+  profileImg String
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  review     Review[]
 
   @@unique([email], name: "unique_user")
   @@map("user")
+}
+
+model Book {
+  id              String        @id @default(uuid())
+  title           String
+  author          String
+  price           Float
+  genre           String
+  publicationDate DateTime
+  categoryId      String
+  category        Category      @relation(fields: [categoryId], references: [id])
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+  review          Review[]
+  OrderedBook     OrderedBook[]
+
+  @@unique([title], name: "unique_book")
+  @@map("books")
 }
 
 model Category {
@@ -33,31 +51,13 @@ model Category {
   title     String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-  book      Book[]
+  books      Book[]
 
   @@unique([title], name: "unique_category")
   @@map("category")
 }
 
-model Book {
-  id              String            @id @default(uuid())
-  title           String
-  author          String
-  price           Float
-  genre           String
-  publicationDate DateTime
-  categoryId      String
-  categoty        Category          @relation(fields: [categoryId], references: [id])
-  createdAt       DateTime          @default(now())
-  updatedAt       DateTime          @updatedAt
-  reviewAndRating ReviewAndRating[]
-  OrderedBook     OrderedBook[]
-
-  @@unique([title], name: "unique_book")
-  @@map("books")
-}
-
-model ReviewAndRating {
+model Review {
   id        String   @id @default(uuid())
   review    String
   rating    Int
@@ -68,7 +68,7 @@ model ReviewAndRating {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  @@map("reviews_and_ratings")
+  @@map("review")
 }
 
 model Order {
@@ -79,7 +79,7 @@ model Order {
   createdAt   DateTime      @default(now())
   updatedAt   DateTime      @updatedAt
 
-  @@map("orders")
+  @@map("order")
 }
 
 model OrderedBook {
@@ -91,7 +91,7 @@ model OrderedBook {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  @@map("ordered_book")
+  @@map("orderBook")
 }
 
 enum OrderStatus {
