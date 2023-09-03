@@ -1,11 +1,11 @@
+import { Book, PrismaClient } from '@prisma/client';
+import { ApiError } from '../../../handlingError/ApiError';
+import { buildWhereConditions } from '../../../helpers/buildWhereCondition';
 import { paginationHelpers } from '../../../helpers/paginationHelper';
 import { IGenericResponse } from '../../../interfaces/common';
 import { IPaginationOptions } from '../../../interfaces/pagination';
-import { ApiError } from '../../../handlingError/ApiError';
-import { buildWhereConditions } from '../../../helpers/buildWhereCondition';
 import { bookSearchableFields } from './book.contants';
 import { IBookFilterRequest } from './book.interface';
-import { Book, PrismaClient } from '@prisma/client';
 
 const prisma = new PrismaClient();
 
@@ -13,12 +13,12 @@ const createBook = async (payload: Book): Promise<Book> => {
   try {
     const result = await prisma.book.create({
       data: payload,
+      include: { category: true },
     });
 
     return result;
   } catch (error) {
     const err = error as any;
-    console.log('Hello----------------------',error);
     if (err.code === 'P2002') {
       throw new ApiError(409, 'This BOOKS is already Exist !! ');
     }
@@ -60,13 +60,19 @@ const getAllBooks = async (
   };
 };
 
-const getSingleBook = async (id: string): Promise<Book | null> => {
-  const result = await prisma.book.findUnique({
-    where: { id: id },
-    include: { category: true },
-  });
+const getSingleBook = async (id: string) => {
+  try {
+    const result = await prisma.book.findUnique({
+      where: { id },
+      include: { category: true },
+    });
 
-  return result;
+    return result;
+  } catch (error) {
+    // Handle the error here, e.g., log it or return an error response
+    console.error('Error while fetching the book:---------------', error);
+    throw error; // Rethrow the error to propagate it up the call stack if needed
+  }
 };
 
 const deleteBook = async (id: string) => {
