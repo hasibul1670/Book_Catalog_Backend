@@ -11,7 +11,7 @@ const createOrder = catchAsync(async (req: Request, res: Response) => {
   const result = await OrderServices.createOrder(req.body);
   sendControllerResponse(
     res,
-    'Academic Semester Created Successfully!',
+    'Order Created Successfully!',
     result
   );
 });

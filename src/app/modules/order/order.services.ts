@@ -16,7 +16,7 @@ const createOrder = async (payload: Order) => {
   } catch (error) {
     const err = error as any;
     if (err.code === 'P2002') {
-      throw new ApiError(409, 'This academic semester already exists');
+      throw new ApiError(409, 'This Order is already placed');
     }
     throw error;
   }
@@ -57,6 +57,7 @@ const getAllOrders = async (
 const getSingleOrder = async (id: string) => {
   const result = await prisma.order.findUnique({
     where: { id },
+    include: { orderedBooks: true, customer: true },
   });
   return result;
 };

@@ -23,6 +23,8 @@ model User {
   createdAt  DateTime @default(now())
   updatedAt  DateTime @updatedAt
   review     Review[]
+  orderId    String?
+  Order      Order[]
 
   @@unique([email], name: "unique_user")
   @@map("user")
@@ -76,11 +78,13 @@ model Order {
   id           String       @id @default(uuid())
   userId       String
   orderedBooks OrderedBook  @relation(fields: [orderedId], references: [id])
+  customer     User         @relation(fields: [userId], references: [id])
   orderedId    String
   status       OrderStatus? @default(pending)
   createdAt    DateTime     @default(now())
   updatedAt    DateTime     @updatedAt
 
+  @@unique([orderedId], name: "unique_orderedId")
   @@map("order")
 }
 

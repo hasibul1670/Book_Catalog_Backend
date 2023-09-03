@@ -56,7 +56,15 @@ const getAllUsers = async (
   };
 };
 
-const getSingleUser = async (id: string) => {
+const getSingleUser = async (token: string) => {
+
+  console.log('Hello',token);
+  const result = await prisma.user.findUnique({
+    where: { token },
+  });
+  return result;
+};
+const getProfile = async (id: string) => {
   const result = await prisma.user.findUnique({
     where: { id },
   });
@@ -101,4 +109,5 @@ export const UserServices = {
   getAllUsers,
   getSingleUser,
   updateSingleUser,
+  getProfile
 };
