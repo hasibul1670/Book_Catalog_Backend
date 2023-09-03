@@ -60,6 +60,14 @@ const getAllBooks = async (
   };
 };
 
+const getBooksByCategoryId = async (id: string) => {
+  const result = await prisma.book.findMany({
+    where: { categoryId: id },
+  });
+
+  return result;
+};
+
 const getSingleBook = async (id: string) => {
   try {
     const result = await prisma.book.findUnique({
@@ -118,4 +126,5 @@ export const BookServices = {
   getSingleBook,
   deleteBook,
   updateBook,
+  getBooksByCategoryId,
 };

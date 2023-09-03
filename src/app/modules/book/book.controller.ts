@@ -29,7 +29,22 @@ const getAllBooks = catchAsync(
     );
     sendControllerResponse(
       res,
-      'All Book Retrieved successfully',
+      'Books Retrieved in that Category successfully',
+      result
+    );
+  }
+);
+
+const getBooksByCategoryId = catchAsync(
+  async (req: Request, res: Response) => {
+    const { id } = req.params;
+    const result = await BookServices.getBooksByCategoryId(
+      id,
+     
+    );
+    sendControllerResponse(
+      res,
+      'All Book Retrieved  in that category successfully',
       result
     );
   }
@@ -78,4 +93,5 @@ export const BookControllers = {
   getSingleBook,
   deleteBook,
   updateBook,
+  getBooksByCategoryId
 };
