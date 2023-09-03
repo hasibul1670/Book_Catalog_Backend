@@ -1,3 +1,3 @@
-export const buildingFilterableFields: string[] = ['searchTerm', 'id'];
+export const orderedBookFilterableFields: string[] = ['searchTerm', 'id'];
 
-export const buildingSearchableFields: string[] = ['title'];
+export const orderedBookSearchableFields: string[] = ['title'];

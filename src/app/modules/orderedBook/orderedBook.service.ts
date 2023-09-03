@@ -1,16 +1,25 @@
-import { Building, PrismaClient } from '@prisma/client';
+import { OrderedBook, PrismaClient } from '@prisma/client';
 import { ApiError } from '../../../handlingError/ApiError';
 import { buildWhereConditions } from '../../../helpers/buildWhereCondition';
 import { paginationHelpers } from '../../../helpers/paginationHelper';
 import { IGenericResponse } from '../../../interfaces/common';
 import { IPaginationOptions } from '../../../interfaces/pagination';
-import { buildingSearchableFields } from './building.constants';
-import { IBuildingsFilterRequest } from './building.interface';
+import { orderedBookSearchableFields } from './orderedBook.constants';
+import { IOrderedBooksFilterRequest } from './orderedBook.interface';
 
 const prisma = new PrismaClient();
-const createBuilding = async (payload: Building): Promise<Building> => {
+
+const createOrderedBook = async (
+  payload: OrderedBook
+): Promise<OrderedBook> => {
+  const { bookId, quantity } = payload;
   try {
-    return await prisma.building.create({ data: payload });
+    return await prisma.orderedBook.create({
+      data: {
+        bookId,
+        quantity: quantity,
+      },
+    });
   } catch (error) {
     const err = error as any;
     if (err.code === 'P2002') {
@@ -19,10 +28,10 @@ const createBuilding = async (payload: Building): Promise<Building> => {
     throw error;
   }
 };
-const getAllBuildings = async (
-  filters: IBuildingsFilterRequest,
+const getAllOrderedBooks = async (
+  filters: IOrderedBooksFilterRequest,
   options: IPaginationOptions
-): Promise<IGenericResponse<Building[]>> => {
+): Promise<IGenericResponse<OrderedBook[]>> => {
   const { limit, page, skip, sortBy, sortOrder } =
     paginationHelpers.calculatePagination(options);
 
@@ -30,17 +39,17 @@ const getAllBuildings = async (
   const { whereConditions, sortConditions } = buildWhereConditions(
     searchTerm,
     filtersData,
-    buildingSearchableFields,
+    orderedBookSearchableFields,
     sortBy,
     sortOrder
   );
-  const result = await prisma.building.findMany({
+  const result = await prisma.orderedBook.findMany({
     where: whereConditions,
     skip,
     take: limit,
     orderBy: sortConditions,
   });
-  const total = await prisma.building.count();
+  const total = await prisma.orderedBook.count();
   return {
     meta: {
       total,
@@ -51,52 +60,17 @@ const getAllBuildings = async (
   };
 };
 
-const getSingleBuilding = async (id: string): Promise<Building | null> => {
-  const result = await prisma.building.findUnique({
+const getSingleOrderedBook = async (id: string) => {
+  const result = await prisma.orderedBook.findMany({
     where: {
       id,
     },
   });
   return result;
 };
-const deleteBuilding = async (id: string) => {
-  try {
-    return await prisma.building.delete({
-      where: { id },
-    });
-  } catch (error) {
-    const err = error as any;
-    if (err.code === 'P2025') {
-      throw new ApiError(404, 'Buildings Not Found !!!');
-    }
-  }
-};
-const updateBuilding = async (
-  id: string,
-  newData: Partial<Building>
-): Promise<Building | null> => {
-  try {
-    const updatedSemester = await prisma.building.update({
-      where: { id },
-      data: newData,
-    });
 
-    return updatedSemester;
-  } catch (error) {
-    const err = error as any;
-    if (err.code === 'P2002') {
-      throw new ApiError(409, 'This Buildings  is already Exist');
-    }
-    if (err.code === 'P2025') {
-      throw new ApiError(404, 'Buildings  Not Found !!!');
-    }
-    throw error;
-  }
-};
-export const BuildingServices = {
-  createBuilding,
-  getAllBuildings,
-  getSingleBuilding,
-  deleteBuilding,
-  updateBuilding,
+export const OrderedBookServices = {
+  createOrderedBook,
+  getAllOrderedBooks,
+  getSingleOrderedBook,
 };

@@ -1,23 +1,14 @@
 import express from 'express';
-import validateRequest from '../../middlewares/validateRequest';
-import { BuildingControllers } from './building.contoller';
-import { BuildingValidation } from './building.validation';
+import { OrderedBookControllers } from './orderedBook.contoller';
 
 const router = express.Router();
 router.post(
-  '/create-building',
-  validateRequest(BuildingValidation.createValidation),
-  BuildingControllers.createBuilding
+  '/create-OrderedBook',
+
+  OrderedBookControllers.createOrderedBook
 );
 
-router.get('/', BuildingControllers.getAllBuildings);
-router.get('/:id', BuildingControllers.getSingleBuilding);
-router.delete('/:id', BuildingControllers.deleteBuilding);
+router.get('/', OrderedBookControllers.getAllOrderedBooks);
+router.get('/:id', OrderedBookControllers.getSingleOrderedBook);
 
-router.patch(
-  '/:id',
-  validateRequest(BuildingValidation.updateValidation),
-  BuildingControllers.updateBuilding
-);
-
-export const BuildingRoutes = router;
+export const OrderedBookRoutes = router;

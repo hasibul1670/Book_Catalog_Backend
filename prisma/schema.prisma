@@ -73,26 +73,27 @@ model Review {
 }
 
 model Order {
-  id          String        @id @default(uuid())
-  userId      String
-  orderedBook OrderedBook[]
-  status      OrderStatus?  @default(pending)
-  createdAt   DateTime      @default(now())
-  updatedAt   DateTime      @updatedAt
+  id           String       @id @default(uuid())
+  userId       String
+  orderedBooks OrderedBook  @relation(fields: [orderedId], references: [id])
+  orderedId    String
+  status       OrderStatus? @default(pending)
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
 
   @@map("order")
 }
 
 model OrderedBook {
   id        String   @id @default(uuid())
-  orderId   String
-  bookId    String
-  order     Order    @relation(fields: [orderId], references: [id])
+  quantity  String
   book      Book     @relation(fields: [bookId], references: [id])
+  bookId    String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  Order     Order[]
 
-  @@map("orderBook")
+  @@map("orderedBook")
 }
 
 enum OrderStatus {

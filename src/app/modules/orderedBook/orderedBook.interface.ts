@@ -1,3 +1,3 @@
-export type IBuildingsFilterRequest = {
+export type IOrderedBooksFilterRequest = {
     searchTerm?: string;
 }
