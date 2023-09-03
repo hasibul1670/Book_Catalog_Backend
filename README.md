@@ -92,3 +92,19 @@ Welcome to the Book Catalog Backend repository! This repository serves as the ba
 - http://localhost:5000/api/v1/books/b33e6c08-8b5e-2f36a4d (DELETE)//Allowed For Admin
 #### Get Books By CategoryId
 - http://localhost:5000/api/v1/books/b33e6c08-8b5e-2f36a4d/category (GET)
+
+
+
+#### Order Routes
+
+- http://localhost:5000/api/v1/order/create-order (POST)// Allowed For Admin
+- http://localhost:5000/api/v1/order (GET)
+- http://localhost:5000/api/v1/order/b33e6c08-8b5e-47b2f364d (GET)
+- http://localhost:5000/api/v1/order/b33e6c08-8b5e-4b2f36a4d (PATCH)//Allowed For Admin
+- http://localhost:5000/api/v1/order/b33e6c08-8b5e-2f36a4d (DELETE)//Allowed For Admin
+
+#### Get User Profile Data
+- http://localhost:5000/api/v1/profile (GET)
+
+
+

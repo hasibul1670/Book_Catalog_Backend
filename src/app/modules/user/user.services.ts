@@ -1,7 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { PrismaClient, User } from '@prisma/client';
+import config from '../../../config';
 import { ApiError } from '../../../handlingError/ApiError';
 import { buildWhereConditions } from '../../../helpers/buildWhereCondition';
+import { jwtHelpers } from '../../../helpers/jwtHelpers';
 import { paginationHelpers } from '../../../helpers/paginationHelper';
 import { IGenericResponse } from '../../../interfaces/common';
 import { IPaginationOptions } from '../../../interfaces/pagination';
@@ -56,15 +58,16 @@ const getAllUsers = async (
   };
 };
 
-const getSingleUser = async (token: string) => {
-
-  console.log('Hello',token);
+const getProfile = async (token: any) => {
+  
+  const decoded = jwtHelpers.verifyToken(token, config.jwt.secret as string);
   const result = await prisma.user.findUnique({
-    where: { token },
+    where: { id: decoded.id },
   });
   return result;
 };
-const getProfile = async (id: string) => {
+
+const getSingleUser = async (id: string) => {
   const result = await prisma.user.findUnique({
     where: { id },
   });
@@ -109,5 +112,5 @@ export const UserServices = {
   getAllUsers,
   getSingleUser,
   updateSingleUser,
-  getProfile
+  getProfile,
 };

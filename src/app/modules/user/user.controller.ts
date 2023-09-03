@@ -46,10 +46,14 @@ const updateSingleUser = catchAsync(async (req: Request, res: Response) => {
   sendControllerResponse(res, 'Single User Updated  successfully !', result);
 });
 const getProfile = catchAsync(async (req: Request, res: Response) => {
-  const token = req.headers.authorization && req.headers.authorization.split(' ')[1];
-  console.log('Hello',token);
+  const { token } = req.headers;
+
   const result = await UserServices.getProfile(token);
-  sendControllerResponse(res, 'Profile data is retrieved successfully !', result);
+  sendControllerResponse(
+    res,
+    'Profile data is retrieved successfully !',
+    result
+  );
 });
 
 export const UserControllers = {

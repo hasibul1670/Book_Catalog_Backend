@@ -23,6 +23,7 @@ const signUp = async (payload: User): Promise<User> => {
         ...userData,
         password: hashedPassword,
         userId: userId,
+
       },
     });
     return result;
@@ -58,8 +59,9 @@ const loginuser = async (
 
     const role = isFound.role;
     const userId = isFound.userId;
+    const id = isFound.id;
     const token = jwtHelpers.createToken(
-      { role, userId },
+      { role, userId,id },
 
       config.jwt.secret as Secret,
       config.jwt.expires_in as string
