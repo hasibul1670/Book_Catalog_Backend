@@ -20,7 +20,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use('/api/v1', router);
 
 app.get('/', async (req, res) => {
-  res.send('Welcome to E-Medicine Server application');
+  res.send('Welcome to Book-catalog Server application');
 });
 
 //client error handler
